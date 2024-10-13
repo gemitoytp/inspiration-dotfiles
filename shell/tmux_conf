@@ -1,77 +1,72 @@
-set -g default-shell /bin/zsh
-set -s escape-time 0
-set -g renumber-windows on
+set -g prefix C-a # Set mode key to Control+a
 
-set -g status-interval 6
-if-shell "test -f ~/.vim/tmux-theme" "source ~/.vim/tmux-theme"
+bind C-a send-prefix
 
-# Screen like binding
-unbind C-b
-set -g prefix C-a
-bind a send-prefix
+bind r source-file ~/.tmux.conf
 
-# Ring the bell if any background window rang a bell
-set -g bell-action any
-
-# Keep your finger on ctrl, or don't
-bind-key ^D detach-client
-
-# Create splits and vertical splits
-
-# Pane resize in all four directions using vi bindings.
-# Can use these raw but I map them to shift-ctrl-<h,j,k,l> in iTerm.
-bind-key J resize-pane -D
-bind-key K resize-pane -U
-bind-key H resize-pane -L
-bind-key L resize-pane -R
-
-# smart pane switching with awareness of vim splits
-bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
-bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
-bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
-bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
-bind -n C-\\ run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys 'C-\\') || tmux select-pane -l"
-
-bind C-l send-keys 'C-l'
-
-# Use vim keybindings in copy mode
-setw -g mode-keys vi
-
-# Setup 'v' to begin selection as in Vim
-bind-key -T edit-mode-vi Up send-keys -X history-up
-bind-key -T edit-mode-vi Down send-keys -X history-down
-unbind-key -T copy-mode-vi Space ; bind-key -T copy-mode-vi v send-keys -X begin-selection
-unbind-key -T copy-mode-vi Enter ; bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
-unbind-key -T copy-mode-vi C-v   ; bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-unbind-key -T copy-mode-vi [     ; bind-key -T copy-mode-vi [ send-keys -X begin-selection
-unbind-key -T copy-mode-vi ]     ; bind-key -T copy-mode-vi ] send-keys -X copy-selection
-
-# set first window to index 1 (not 0) to map more to the keyboard layout...
-set-option -g base-index 1
-set-window-option -g pane-base-index 1
-
-# Toggle mouse on
-bind m \
-  set -g mouse on \;\
-  display 'Mouse: ON'
-
-# Toggle mouse off
-bind M \
-  set -g mouse off \;\
-  display 'Mouse: OFF'
-
-set -g @resurrect-strategy-nvim 'session'
-set -g @continuum-restore 'on'
+#
+# Plugins
+#
 
 # List of plugins
-set -g @plugin 'tmux-plugins/tpm'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'tmux-plugins/tmux-sessionist'
-set -g @plugin 'tmux-plugins/tmux-pain-control'
+set -g @tpm_plugins 'tmux-plugins/tpm' # tmux package manager
+set -g @tpm_plugins 'tmux-plugins/tmux-sensible' # sensible settings everyone can agree on (hopefully)
+set -g @tpm_plugins 'tmux-plugins/tmux-yank' # for copying to system clipboard
+set -g @tpm_plugins 'tmux-plugins/tmux-prefix-highlight' # highlights when you press tmux prefix key
+set -g @tpm_plugins 'tmux-plugins/tmux-pain-control' # for controlling panes
+set -g @tpm_plugins 'christoomey/vim-tmux-navigator' # for better navigation
+set -g @plugin 'niksingh710/minimal-tmux-status'
 
+# ============================================================
+# MY CONFIGURATION
+# ============================================================
+
+# scroll activation
+set -g mouse on
+
+# set history limit
+set-option -g history-limit 100000000
+
+# make tmux more responsive to commands
+set -s escape-time 0
+
+# windows and panes start from 1
+set -g base-index 1
+set -g pane-base-index 1
+
+# better splitting
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"
+bind x kill-pane
+
+setw -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# smart pane switching with awareness of vim splits
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-i run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
+
+bind -n C-Left run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-Down run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-Up run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-Right run "(tmux display-message -p '#{pane_current_command}' | grep -iq vim && tmux send-keys C-l) || tmux select-pane -R"
+
+#Resizing panes
+bind -r Down resize-pane -D 3
+bind -r Up resize-pane -U 3
+bind -r Left resize-pane -L 3
+bind -r Right resize-pane -R 3
+
+set -g default-terminal "screen-256color"
+
+# if-shell "test -f ~/.tmuxline" "source ~/.tmuxline"
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
-# Local config
-if-shell "[ -f ~/.tmux.conf.user ]" 'source ~/.tmux.conf.user'
+
+unbind -n Tab

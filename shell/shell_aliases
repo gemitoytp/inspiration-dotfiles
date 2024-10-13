@@ -1,6 +1,6 @@
 #bin/bash
 
-alias dotfiles="~/.dotfiles/bin/dotfiles"
+alias dotfiles="~/.dotfiles"
 # Allow aliases to be with sudo
 alias sudo="sudo "
 
@@ -8,6 +8,7 @@ alias c="clear"
 
 # ruby gems aliases
 alias r='rails'
+alias br='bin/rails'
 
 # Neovim and vim
 alias v="nvim"
@@ -49,6 +50,48 @@ alias tml="tmux list-sessions"
 alias tma="tmux -2 attach -t $1"
 alias tmk="tmux kill-session -t $1"
 
+# zsh
+alias szshrc="source ~/.zshrc"
+
+# Personal
+
+ alias nvim="~/.local/bin/lvim"
+# alias lvim="~/.local/bin/lvim"
+# alias lv="~/.local/bin/lvim"
+ alias vim="~/.local/bin/lvim"
+alias cls="clear"
+alias be="bundle exec"
+alias bes="bundle exec standardrb"
+alias ber="bundle exec rubocop"
+alias gdf="git diff --name-only"
+alias rspecgf="git diff --name-only | grep _spec\\.rb$ | xargs rspec"
+alias rubocopgf="git diff --name-only | grep .rb$ | xargs rubocop -A"
+
+alias edit_aliases='nvim ~/.dotfiles/shell/shell_aliases'
+alias edit_git_aliases='nvim ~/.dotfiles/git/git_aliases'
+alias edit_exports='nvim ~/.dotfiles/shell/shell_exports' 
+
+# SSH
+
+alias sshaddytp="ssh-add -D; ssh-add ~/.ssh/id_ed25519"
+alias sshaddpersonal="ssh-add -D; ssh-add ~/.ssh/personal"
+
+# Projects
+
+alias ws="~/src/Workspace"
+alias ytp="~/src/Workspace/ytp"
+
+# Kube YTP
+
+alias ytp_staging="aws eks --region us-west-2 update-kubeconfig --name eks-staging"
+alias ytp_production="aws eks --region us-west-2 update-kubeconfig --name eks-production-v2"
+alias ytp_context="kubectl config current-context"
+alias ytp_pods="kubectl get pods"
+
+function ytp_use_pod() {
+  # kubectl exec $1 -- /bin/sh
+  kubectl exec -it $1 /bin/sh
+}
 
 #functions
 function feature() {

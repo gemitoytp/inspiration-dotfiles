@@ -25,3 +25,4 @@ tags.lock
 package-lock.json
 .solargraph.yml
 .irb_history
+.vscode

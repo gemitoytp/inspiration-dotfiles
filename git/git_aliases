@@ -27,3 +27,18 @@ alias gco="git checkout"
 
 alias gr="git rebase"
 #__git_complete gco _git_rebase
+
+alias Gs="git status"
+alias Gcheckout="git checkout"
+alias Gdiff="git diff"
+alias Gadd="git add"
+alias Gcommit="git commit -m"
+alias GScommit="git commit -S -m"
+alias Gscommit="git commit -S -m"
+alias Gpush="git push"
+alias Gpull="git pull"
+alias Gbranch="git branch"
+alias Gcommitlastdelete="git reset --hard HEAD~1"
+alias Gcommitlastundo="git reset HEAD~1"
+alias Gcommitamendnoedit="git commit --amend --no-edit"
+alias Grestorestaged="git restore --staged"
